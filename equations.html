@@ -8,7 +8,7 @@
 </head>
 <body class="trainer page-equations">
 <div class="container">
-    <div class="counter-badge" id="cnt" onclick="resC()">Переглянуто: 0</div>
+    <div class="counter-badge" id="counter" onclick="counter.reset()" title="Натисніть для обнулення">Переглянуто: 0</div>
     <h1>Тренажер: Лінійні Рівняння та Системи</h1>
     <div class="control-panel">
         <div class="tabs">
@@ -25,7 +25,14 @@
     <div class="controls"><button class="btn" onclick="gen(true)">Інший приклад</button></div>
 </div>
 <script>
-    var m = 0, c = 0;
+    var m = 0;
+
+    const counter = {
+        n: 0,
+        show() { document.getElementById('counter').innerText = 'Переглянуто: ' + this.n; },
+        inc() { this.n++; this.show(); },
+        reset() { this.n = 0; this.show(); },
+    };
 
     var rnd = function (x, y) { return Math.floor(Math.random() * (y - x + 1)) + x; };
     var rndN = function (x, y) { var n = 0; while (n === 0) n = rnd(x, y); return n; };
@@ -66,16 +73,8 @@
         gen(true);
     }
 
-    function resC() {
-        c = 0;
-        document.getElementById('cnt').innerText = 'Переглянуто: 0';
-    }
-
     function gen(inc) {
-        if (inc) {
-            c++;
-            document.getElementById('cnt').innerText = 'Переглянуто: ' + c;
-        }
+        if (inc) counter.inc();
         var box = document.getElementById('box'), html = '';
 
         if (m === 0) {

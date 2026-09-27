@@ -9,7 +9,7 @@
 <body class="trainer page-expressions">
 
 <div class="container">
-    <div class="counter-badge" id="counterDisplay" onclick="resetCounter()" title="Натисніть для обнулення">Переглянуто: 0</div>
+    <div class="counter-badge" id="counter" onclick="counter.reset()" title="Натисніть для обнулення">Переглянуто: 0</div>
 
     <h1>Тренажер перетворення виразів</h1>
     <div class="control-panel">
@@ -39,7 +39,14 @@
 
 <script>
     let currentMode = 0;
-    let exampleCount = 0;
+
+    const counter = {
+        n: 0,
+        show() { document.getElementById('counter').innerText = 'Переглянуто: ' + this.n; },
+        inc() { this.n++; this.show(); },
+        reset() { this.n = 0; this.show(); },
+    };
+
     const rnd = (min, max) => { let n = 0; while(!n) n = Math.floor(Math.random()*(max-min+1))+min; return n; };
 
     function changeMode(mode, element) {
@@ -47,11 +54,6 @@
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         element.classList.add('active');
         generateExample(true);
-    }
-
-    function resetCounter() {
-        exampleCount = 0;
-        document.getElementById('counterDisplay').innerText = `Переглянуто: ${exampleCount}`;
     }
 
     function fmt(val, vChar, isFirst) {
@@ -64,10 +66,7 @@
     function sign(val) { return val > 0 ? '<span class="sign">+</span>' : '<span class="sign">-</span>'; }
 
     function generateExample(shouldIncrement = true) {
-        if (shouldIncrement) {
-            exampleCount++;
-            document.getElementById('counterDisplay').innerText = `Переглянуто: ${exampleCount}`;
-        }
+        if (shouldIncrement) counter.inc();
 
         const isMinus = document.getElementById('minusCheckbox').checked;
         const isInverse = document.getElementById('inverseCheckbox').checked;

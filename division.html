@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тренажер: Ознаки подільності</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="trainer page-division">
+<div class="container">
+    <div class="counter-badge" id="counter" onclick="counter.reset()" title="Натисніть для обнулення">Переглянуто: 0</div>
+    <h1>Ознаки подільності</h1>
+    <div class="control-panel">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="selectTab(0, this)">2, 5 та 3, 9, 11</button>
+            <button class="tab-btn" onclick="selectTab(1, this)">7 та 13</button>
+            <div class="digit-picker" role="radiogroup" aria-label="Кількість цифр" id="digitPicker"></div>
+        </div>
+    </div>
+    <div class="equation-container"><div class="equation-display" id="box"></div></div>
+    <div class="controls"><button class="btn" onclick="next()">Інший приклад</button></div>
+</div>
+<script>
+    // Digit-count options (source of truth for the dot picker).
+    // The digit count also equals the number of reduction steps for 7 and 13.
+    const OPTIONS = [3, 4, 5], MARKS = ['▲', '■', '⬟'];
+    const state = { tab: 0, digits: OPTIONS[0], number: 0 };
+
+    const counter = {
+        n: 0,
+        show() { document.getElementById('counter').innerText = 'Переглянуто: ' + this.n; },
+        inc() { this.n++; this.show(); },
+        reset() { this.n = 0; this.show(); },
+    };
+
+    // Colored spans reuse factors.html tokens: nm=blue, vl=purple, sign=orange.
+    const span = (cls, v) => `<span class="${cls}">${v}</span>`;
+    const verdict = (ok, by) => ok ? span('ok', '⋮ ' + by) : `<s>⋮ ${by}</s>`;
+    const digitsOf = (num) => String(num).split('').map(Number);
+
+    function buildPicker() {
+        document.getElementById('digitPicker').innerHTML = OPTIONS.map((d, i) =>
+            `<label class="dot" title="${d}-значне число">
+                <input type="radio" name="digits" value="${d}" ${i ? '' : 'checked'} onchange="selectDigits(${d})">
+                <span class="dot-mark">${MARKS[i]}</span>
+            </label>`).join('');
+    }
+
+    // Tail rule: drop the last digit and combine it back (− for 7, + for 13).
+    // Returns one HTML line per reduction step.
+    function reductionSteps(op, factor, divisor) {
+        const lines = [];
+        let value = state.number;
+        for (let i = 0, steps = state.digits - 2; i < steps && String(value).length >= 2; i++) {
+            const head = String(value).slice(0, -1), tail = Number(String(value).slice(-1));
+            value = Number(head) + (op === '-' ? -1 : 1) * tail * factor;
+            let shown = String(value);
+            if (i < steps - 1 && shown.length >= 2 && shown[0] !== '-') shown = shown.slice(0, -1) + span('nm', shown.slice(-1));
+            lines.push(`${head} ${op} (${span('nm', tail)} × ${span('vl', factor)}) = ${shown}`);
+        }
+        lines[lines.length - 1] += ' ' + verdict(value % divisor === 0, divisor);
+        return lines;
+    }
+
+    function renderSimpleRules() {
+        const n = state.number, digits = digitsOf(n);
+        const head = String(n).slice(0, -1), tail = digits[digits.length - 1];
+        const sum = digits.reduce((a, d) => a + d, 0);
+        const sumExpr = digits.map((d) => span('vl', d)).join('+') + ` = ${sum}`;
+
+        // Alternating sum for 11: odd positions purple, even positions orange.
+        const alt = digits.reduce((a, d, i) => a + (i % 2 ? -d : d), 0);
+        const altNum = digits.map((d, i) => span(i % 2 ? 'sign' : 'vl', d)).join('');
+        const odd = digits.filter((_, i) => !(i % 2)).map((d) => span('vl', d)).join('+');
+        const even = digits.filter((_, i) => i % 2).map((d) => span('sign', d)).join('+');
+
+        const tailSpan = span('nm', tail), byTail = `${head}${tailSpan}`;
+        const digitRule = (by) => `${byTail} ${verdict(!(tail % by), by)} ➔ ${tailSpan} ${verdict(!(tail % by), by)}`;
+        const sumRule = (by) => `${span('vl', n)} ${verdict(!(sum % by), by)} ➔ ${sumExpr} ${verdict(!(sum % by), by)}`;
+
+        return [
+            digitRule(2),
+            `<div style="margin-bottom:12px">${digitRule(5)}</div>`,
+            sumRule(3), sumRule(9),
+            `${altNum} ${verdict(!(alt % 11), 11)} ➔ (${odd}) − (${even}) = ${alt} ${verdict(!(alt % 11), 11)}`,
+        ].map((html, i) => i === 1 ? html : `<div>${html}</div>`).join('');
+    }
+
+    function renderRecursiveRules() {
+        const head = String(state.number).slice(0, -1), tail = String(state.number).slice(-1);
+        const block = (op, factor, divisor, spacer) => {
+            const steps = reductionSteps(op, factor, divisor);
+            const heading = `${head}${span('nm', tail)} ${verdict(steps.at(-1).includes('class="ok"'), divisor)} ➔`;
+            return steps.map((step, i) => {
+                const pad = spacer && i === steps.length - 1 ? ' style="padding-bottom:12px"' : '';
+                const label = i ? `<td${pad}></td>` : `<td style="padding-right:8px"${pad}>${heading}</td>`;
+                return `<tr>${label}<td${pad}>${step}</td></tr>`;
+            }).join('');
+        };
+        return `<table>${block('-', 2, 7, true)}${block('+', 4, 13, false)}</table>`;
+    }
+
+    function render() {
+        document.getElementById('box').innerHTML = state.tab ? renderRecursiveRules() : renderSimpleRules();
+    }
+
+    function selectTab(tab, button) {
+        state.tab = tab;
+        document.querySelectorAll('.tab-btn').forEach((b) => b.classList.toggle('active', b === button));
+        render();
+    }
+
+    function selectDigits(digits) { state.digits = digits; next(); }
+
+    function next() {
+        counter.inc();
+        const min = 10 ** (state.digits - 1);
+        state.number = Math.floor(min + Math.random() * (min * 10 - min));
+        render();
+    }
+
+    window.onload = function () { buildPicker(); next(); };
+</script>
+</body>
+</html>

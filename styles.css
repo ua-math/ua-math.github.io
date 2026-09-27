@@ -27,7 +27,7 @@ body.trainer {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     padding: 40px var(--gap-x);
     width: 100%;
-    max-width: 1100px;
+    max-width: 1280px;
     text-align: center;
     position: relative;
 }
@@ -287,7 +287,7 @@ body.home {
     justify-content: center;
 }
 .home .container {
-    max-width: 900px;
+    max-width: 1200px;
     width: 90%;
     text-align: center;
     padding: 20px;
@@ -339,6 +339,7 @@ body.home {
     color: var(--primary);
 }
 .home .icon-box.fraction { font-size: 2rem; }
+.home .icon-box.divisibility { letter-spacing: -0.5px; }
 
 .home .card h2 {
     font-size: 1.4rem;
@@ -355,3 +356,33 @@ body.home {
     font-size: 0.9rem;
     color: #999;
 }
+
+/* ============================================================
+   Divisibility page (division.html)
+   Reuses factors.html tokens (.nm, .vl, .sign) and <s> for the
+   "not divisible" mark; only layout and the dot picker are new.
+   ============================================================ */
+.page-division .equation-display {
+    font-size: 2.2rem;
+    display: block;
+    text-align: left;
+    line-height: 1.8;
+}
+.page-division .ok { color: #10b981; font-weight: bold; }
+.page-division table { border-collapse: collapse; }
+.page-division td { padding: 0; vertical-align: top; }
+
+.page-division .digit-picker {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 20px;
+    cursor: pointer;
+}
+.page-division .dot-mark {
+    font-size: 1.8rem;
+    line-height: 1;
+    color: #cbd5e1;
+}
+.page-division .dot input { position: absolute; opacity: 0; }
+.page-division .dot input:checked + .dot-mark { color: #2563eb; }

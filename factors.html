@@ -4,58 +4,181 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Тренажер: Арифметика та Дроби</title>
-    <style>
-        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
-        .cn { background-color: #ffffff; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); padding: 40px; width: 100%; max-width: 1350px; text-align: center; position: relative; }
-        .bd { position: absolute; top: 20px; right: 20px; background-color: #e2e8f0; color: #475569; padding: 8px 16px; border-radius: 20px; font-size: 1rem; font-weight: bold; cursor: pointer; }
-        h1 { color: #1e293b; font-size: 1.8rem; margin-bottom: 25px; }
-        .cp { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 30px; }
-        .rw { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; width: 100%; margin-bottom: 8px; }
-        .tb { background-color: #f1f5f9; color: #475569; border: 2px solid #cbd5e1; border-radius: 8px; padding: 10px 15px; font-size: 1.1rem; font-weight: 500; cursor: pointer; }
-        .tb.active { background-color: #2563eb; color: white; border-color: #2563eb; }
-        .tb-bold { font-weight: 800; border-color: #94a3b8; }
-        .tb-bold.active { background-color: #1d4ed8; border-color: #1d4ed8; }
-        .eq { overflow-x: auto; white-space: nowrap; background-color: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 40px 15px; margin-bottom: 30px; }
-        .ds { font-size: 2.2rem; font-weight: bold; color: #0f172a; display: inline-block; vertical-align: middle; }
-        .nm { color: #2563eb; } .vl { color: #8b5cf6; } .sg { color: #f97316; font-weight: bold; padding: 0 6px; } 
-        .lb { font-size: 1.7rem; color: #475569; font-weight: 600; padding: 0 4px; }
-        .wh { color: #8b5cf6; font-size: 2.5rem; padding-right: 2px; }
-        .fr { display: inline-flex; flex-direction: column; vertical-align: middle; align-items: center; padding: 0 2px; }
-        .nu { border-bottom: 4px solid #f97316; padding-bottom: 2px; line-height: 1; }
-        .de { padding-top: 4px; line-height: 1; }
-        .mp { font-size: 1.2rem; color: #10b981; vertical-align: super; font-weight: bold; }
-        s { color: #ef4444; text-decoration: line-through; font-weight: bold; }
-        s .nm, s .vl { color: #ef4444; }
-        .hc { text-decoration: underline; text-decoration-style: wavy; text-decoration-color: #10b981; text-underline-offset: 4px; display: inline-block; }
-        .bt { background-color: #10b981; color: white; border: none; border-radius: 12px; padding: 18px 36px; font-size: 1.4rem; font-weight: 600; cursor: pointer; width: 100%; max-width: 350px; }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-<div class="cn">
-    <div class="bd" id="cnt" onclick="resC()">Переглянуто: 0</div>
+<body class="trainer page-factors">
+<div class="container">
+    <div class="counter-badge" id="cnt" onclick="resC()">Переглянуто: 0</div>
     <h1>Тренажер: Арифметика та Дроби</h1>
-    <div class="cp">
-        <div class="rw">
-            <button class="tb active" onclick="chM(0, this)">Розклад на множники</button>
-            <button class="tb" onclick="chM(1, this)">НСД(a; b)</button>
-            <button class="tb" onclick="chM(2, this)">НСК(a; b)</button>
+    <div class="control-panel">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="chM(0, this)">Розклад на множники</button>
+            <button class="tab-btn" onclick="chM(1, this)">НСД(a; b)</button>
+            <button class="tab-btn" onclick="chM(2, this)">НСК(a; b)</button>
         </div>
-        <div class="rw">
-            <button class="tb" onclick="chM(3, this)">Мішані дроби</button>
-            <button class="tb" onclick="chM(4, this)">Скорочення дробів</button>
-            <button class="tb" onclick="chM(5, this)">Спільний знаменник</button>
+        <div class="tabs">
+            <button class="tab-btn" onclick="chM(3, this)">Мішані дроби</button>
+            <button class="tab-btn" onclick="chM(4, this)">Скорочення дробів</button>
+            <button class="tab-btn" onclick="chM(5, this)">Спільний знаменник</button>
         </div>
-        <div class="rw">
-            <button class="tb tb-bold" onclick="chM(6, this)">Додавання та віднімання</button>
-            <button class="tb tb-bold" onclick="chM(7, this)">Множення та ділення</button>
+        <div class="tabs">
+            <button class="tab-btn tb-bold" onclick="chM(6, this)">Додавання та віднімання</button>
+            <button class="tab-btn tb-bold" onclick="chM(7, this)">Множення та ділення</button>
         </div>
     </div>
-    <div class="eq"><div class="ds" id="box"></div></div>
-    <div class="controls"><button class="bt" onclick="gen(true)">Інший приклад</button></div>
+    <div class="equation-container"><div class="equation-display" id="box"></div></div>
+    <div class="controls"><button class="btn" onclick="gen(true)">Інший приклад</button></div>
 </div>
 <script>
-    var m=0,c=0;var rnd=function(x,y){return Math.floor(Math.random()*(y-x+1))+x;};var gcd=function(x,y){return y===0?x:gcd(y,x%y);};var lcm=function(x,y){return(x*y)/gcd(x,y);};var fN=function(x,cl){return'<span class="'+(cl||'nm')+'">'+x+'</span>';};var fS=function(s){return'<span class="sg">'+s+'</span>';};function getP(i){return parseInt('2,3,5,7,11,13'.split(',')[i]);}function getC(n,p){var k=0,v=n;while(v%p===0&&v!==0){k++;v/=p;}return k;}function bF(n,d,mp,cN,cD){var sup=mp?'<span class="mp"><sup>'+mp+'</sup></span>':'';return'<div class="fr"><div class="nu">'+fN(n,cN)+sup+'</div><div class="de">'+fN(d,cD)+'</div></div>';}function bS(n,d,mp){var sup=mp?'<span class="mp"><sup>'+mp+'</sup></span>':'';return'<div class="fr"><div class="nu"><s>'+fN(n)+'</s>'+sup+'</div><div class="de"><s>'+fN(d)+'</s></div></div>';}function red(n,d){var g=gcd(n,d);if(g<=1)return'';return fS('=')+bS(n,d,':'+g)+fS('=')+bF(n/g,d/g,'',0,'vl');}function buildP(n,co,g){var out='',f=true;for(var i=0;i<6;i++){var p=getP(i),c1=getC(n,p),c2=co?getC(co,p):0;if(c1!==0){if(!f)out+=fS('·');var txt=fN(p)+(c1!==1?'<sup>'+c1+'</sup>':'');if(co&&(g?(c1<=c2):(c1>=c2)))txt='<span class="hc">'+txt+'</span>';out+=txt;f=false;}}return out;}function buildR(n1,n2,g){var out='',f=true;for(var i=0;i<6;i++){var p=getP(i),t=g?Math.min(getC(n1,p), getC(n2,p)):Math.max(getC(n1,p),getC(n2,p));if(t!==0){if(!f)out+=fS('·');out+=fN(p)+(t!==1?'<sup>'+t+'</sup>':'');f=false;}}return out===''?fN('1'):out;}function buildCh(n){var out='',v=n,f=true;for(var i=0;i<6;i++){var p=getP(i);while(v%p===0){if(!f)out+=fS('·');out+=fN(p);v/=p;f=false;}}return out;}function getSmart(){var res=1;res*=getP(rnd(3,5));for(var i=0;i<4;i++){var p=getP(rnd(0,5));if(res*p<=220)res*=p;}return res;}function chM(x,el){m=x;var b=document.querySelectorAll('.tb');for(var i=0;i<b.length;i++)b[i].classList.remove('active');el.classList.add('active');gen(true);}function resC(){c=0;document.getElementById('cnt').innerText='Переглянуто: 0';}function gen(inc){if(inc){c++;document.getElementById('cnt').innerText='Переглянуто: '+c;}var box=document.getElementById('box'),html='';if(m===0){var num=getSmart(),chStr=buildCh(num),pStr=buildP(num,0,false);html=fN(num)+fS('=')+chStr+(chStr===pStr?'':fS('=')+pStr);}else if(m===1||m===2){var n1=getSmart(),n2=getSmart();while(n1===n2)n2=getSmart();var isG=m===1,lbl='<span class="lb">'+(isG?'НСД':'НСК')+'</span>';var p2=lbl+fS('(')+buildP(n1,n2,isG)+fS(';')+buildP(n2,n1,isG)+fS(')'),p3=buildR(n1,n2,isG),p4=fN(isG?gcd(n1,n2):lcm(n1,n2));html=lbl+fS('(')+fN(n1)+ fS(';') +fN(n2)+fS(')')+fS('=')+p2+(p3===p4?'':fS('=')+p3)+fS('=')+p4;}else if(m===3){var sd=rnd(3,9),wh=rnd(1,5),re=rnd(1,sd-1),num=wh*sd+re;html=bF(num,sd)+fS('➔')+bF(wh*sd+'+'+re,sd)+fS('➔')+bF(wh*sd,sd,0,'wh')+fS('+')+bF(re,sd)+fS('=')+'<span class="wh">'+wh+'</span>'+bF(re,sd,'',0,'vl');}else if(m===4){var com=rnd(2,7),sd=rnd(3,9),sn=rnd(1,sd-1);while(gcd(sn,sd)>1){sd=rnd(3,9);sn=rnd(1,sd-1);}html=bF(sn*com,sd*com)+fS('➔')+bS(sn*com,sd * com,':'+com)+fS('=')+bF(sn,sd,'',0,'vl');}else if(m===5){var sd1=rnd(3,7),sd2=rnd(3,7);while(sd1===sd2)sd2=rnd(3,7);var sn1=rnd(1,sd1-1),sn2=rnd(1,sd2-1),cd=lcm(sd1,sd2),m1=cd/sd1,m2=cd/sd2;html=bF(sn1,sd1,'('+m1+')')+'<span class="lb"> і </span>'+bF(sn2,sd2,'（'+m2+')')+fS('➔')+bF(sn1*m1,cd)+'<span class="lb"> і </span>'+bF(sn2*m2,cd);}else if(m===6){var sd1=rnd(3,6),sd2=rnd(3,6);while(sd1===sd2)sd2=rnd(3,6);var sn1=rnd(1,sd1-1),sn2=rnd(1,sd2-1),isAdd=rnd(0,1)==1,cd=lcm(sd1,sd2),m1=cd/sd1,m2=cd/sd2,op=isAdd?'+':'-';var top1=sn1*m1,top2=sn2*m2,finalTop=isAdd?(top1+top2):(top1-top2);if(finalTop<=0){op='+';finalTop=top1+top2;}html=bF(sn1,sd1,'('+m1+')')+fS(op)+bF(sn2,sd2,'('+m2+')')+fS('=')+bF(top1+op+top2,cd)+fS('=')+bF(finalTop,cd)+red(finalTop,cd);}else{var sd1=rnd(3,8),sd2=rnd(3,8),sn1=rnd(1,sd1-1),sn2=rnd(1,sd2-1),isM=rnd(0,1)==1;var fn=isM?sn1*sn2:sn1*sd2,fd=isM?sd1*sd2:sd1*sn2;if(isM){html=bF(sn1,sd1,0,'nm','vl')+fS('·')+bF(sn2,sd2,0,'nm','vl')+fS('=')+bF(sn1+'·'+sn2,sd1+'·'+sd2,0,'nm','vl')+fS('=')+bF(fn,fd,'',0,'vl')+red(fn,fd);}else{html=bF(sn1,sd1,0,'nm','vl')+fS(':')+bF(sn2,sd2,0,'nm','vl')+fS('=')+bF(sn1,sd1,0,'nm','vl')+fS('·')+bF(sd2,sn2,0,'vl','nm')+fS('=')+bF(fn,fd,'',0,'vl')+red(fn,fd);}}box.innerHTML=html;}window.onload=function(){gen(true);};
+    var m = 0, c = 0;
+
+    var rnd = function (x, y) { return Math.floor(Math.random() * (y - x + 1)) + x; };
+    var gcd = function (x, y) { return y === 0 ? x : gcd(y, x % y); };
+    var lcm = function (x, y) { return (x * y) / gcd(x, y); };
+    var fN = function (x, cl) { return '<span class="' + (cl || 'nm') + '">' + x + '</span>'; };
+    var fS = function (s) { return '<span class="sign">' + s + '</span>'; };
+
+    function getP(i) {
+        return parseInt('2,3,5,7,11,13'.split(',')[i]);
+    }
+
+    function getC(n, p) {
+        var k = 0, v = n;
+        while (v % p === 0 && v !== 0) { k++; v /= p; }
+        return k;
+    }
+
+    function bF(n, d, mp, cN, cD) {
+        var sup = mp ? '<span class="mp"><sup>' + mp + '</sup></span>' : '';
+        return '<div class="fr"><div class="nu">' + fN(n, cN) + sup + '</div><div class="de">' + fN(d, cD) + '</div></div>';
+    }
+
+    function bS(n, d, mp) {
+        var sup = mp ? '<span class="mp"><sup>' + mp + '</sup></span>' : '';
+        return '<div class="fr"><div class="nu"><s>' + fN(n) + '</s>' + sup + '</div><div class="de"><s>' + fN(d) + '</s></div></div>';
+    }
+
+    function reduction(n, d) {
+        var g = gcd(n, d);
+        if (g <= 1) return '';
+        return fS('=') + bS(n, d, ':' + g) + fS('=') + bF(n / g, d / g, '', 0, 'nm');
+    }
+
+    function buildP(n, co, g) {
+        var out = '', f = true;
+        for (var i = 0; i < 6; i++) {
+            var p = getP(i), c1 = getC(n, p), c2 = co ? getC(co, p) : 0;
+            if (c1 !== 0) {
+                if (!f) out += fS('·');
+                var txt = fN(p) + (c1 !== 1 ? '<sup>' + c1 + '</sup>' : '');
+                if (co && (g ? (c1 <= c2) : (c1 >= c2))) txt = '<span class="hc">' + txt + '</span>';
+                out += txt;
+                f = false;
+            }
+        }
+        return out;
+    }
+
+    function buildR(n1, n2, g) {
+        var out = '', f = true;
+        for (var i = 0; i < 6; i++) {
+            var p = getP(i), t = g ? Math.min(getC(n1, p), getC(n2, p)) : Math.max(getC(n1, p), getC(n2, p));
+            if (t !== 0) {
+                if (!f) out += fS('·');
+                out += fN(p) + (t !== 1 ? '<sup>' + t + '</sup>' : '');
+                f = false;
+            }
+        }
+        return out === '' ? fN('1') : out;
+    }
+
+    function buildCh(n) {
+        var out = '', v = n, f = true;
+        for (var i = 0; i < 6; i++) {
+            var p = getP(i);
+            while (v % p === 0) {
+                if (!f) out += fS('·');
+                out += fN(p);
+                v /= p;
+                f = false;
+            }
+        }
+        return out;
+    }
+
+    function getSmart() {
+        var res = 1;
+        res *= getP(rnd(3, 5));
+        for (var i = 0; i < 4; i++) {
+            var p = getP(rnd(0, 5));
+            if (res * p <= 220) res *= p;
+        }
+        return res;
+    }
+
+    function chM(x, el) {
+        m = x;
+        var b = document.querySelectorAll('.tab-btn');
+        for (var i = 0; i < b.length; i++) b[i].classList.remove('active');
+        el.classList.add('active');
+        gen(true);
+    }
+
+    function resC() {
+        c = 0;
+        document.getElementById('cnt').innerText = 'Переглянуто: 0';
+    }
+
+    function gen(inc) {
+        if (inc) {
+            c++;
+            document.getElementById('cnt').innerText = 'Переглянуто: ' + c;
+        }
+        var box = document.getElementById('box'), html = '';
+
+        if (m === 0) {
+            var num = getSmart(), chStr = buildCh(num), pStr = buildP(num, 0, false);
+            html = fN(num) + fS('=') + chStr + (chStr === pStr ? '' : fS('=') + pStr);
+        } else if (m === 1 || m === 2) {
+            var n1 = getSmart(), n2 = getSmart();
+            while (n1 === n2) n2 = getSmart();
+            var isG = m === 1, lbl = '<span class="lb">' + (isG ? 'НСД' : 'НСК') + '</span>';
+            var p2 = lbl + fS('(') + buildP(n1, n2, isG) + fS(';') + buildP(n2, n1, isG) + fS(')'),
+                p3 = buildR(n1, n2, isG),
+                p4 = fN(isG ? gcd(n1, n2) : lcm(n1, n2));
+            html = lbl + fS('(') + fN(n1) + fS(';') + fN(n2) + fS(')') + fS('=') + p2 + (p3 === p4 ? '' : fS('=') + p3) + fS('=') + p4;
+        } else if (m === 3) {
+            var sd = rnd(3, 9), wh = rnd(1, 5), re = rnd(1, sd - 1), num = wh * sd + re;
+            html = bF(num, sd) + fS('➔') + bF(wh * sd + '+' + re, sd) + fS('➔') + bF(wh * sd, sd, 0, 'wh') + fS('+') + bF(re, sd) + fS('=') + '<span class="wh">' + wh + '</span>' + bF(re, sd, '', 0, 'vl');
+        } else if (m === 4) {
+            var com = rnd(2, 7), sd = rnd(3, 9), sn = rnd(1, sd - 1);
+            while (gcd(sn, sd) > 1) { sd = rnd(3, 9); sn = rnd(1, sd - 1); }
+            html = bF(sn * com, sd * com) + fS('➔') + bS(sn * com, sd * com, ':' + com) + fS('=') + bF(sn, sd, '', 0, 'nm');
+        } else if (m === 5) {
+            var sd1 = rnd(3, 7), sd2 = rnd(3, 7);
+            while (sd1 === sd2) sd2 = rnd(3, 7);
+            var sn1 = rnd(1, sd1 - 1), sn2 = rnd(1, sd2 - 1), cd = lcm(sd1, sd2), m1 = cd / sd1, m2 = cd / sd2;
+            html = bF(sn1, sd1, '(' + m1 + ')') + '<span class="lb"> і </span>' + bF(sn2, sd2, '（' + m2 + ')') + fS('➔') + bF(sn1 * m1, cd) + '<span class="lb"> і </span>' + bF(sn2 * m2, cd);
+        } else if (m === 6) {
+            var sd1 = rnd(3, 6), sd2 = rnd(3, 6);
+            while (sd1 === sd2) sd2 = rnd(3, 6);
+            var sn1 = rnd(1, sd1 - 1), sn2 = rnd(1, sd2 - 1), isAdd = rnd(0, 1) == 1, cd = lcm(sd1, sd2), m1 = cd / sd1, m2 = cd / sd2, op = isAdd ? '+' : '-';
+            var top1 = sn1 * m1, top2 = sn2 * m2, finalTop = isAdd ? (top1 + top2) : (top1 - top2);
+            if (finalTop <= 0) { op = '+'; finalTop = top1 + top2; }
+            html = bF(sn1, sd1, '(' + m1 + ')') + fS(op) + bF(sn2, sd2, '(' + m2 + ')') + fS('=') + bF(top1 + op + top2, cd) + fS('=') + bF(finalTop, cd) + reduction(finalTop, cd);
+        } else {
+            var sd1 = rnd(3, 8), sd2 = rnd(3, 8), sn1 = rnd(1, sd1 - 1), sn2 = rnd(1, sd2 - 1), isM = rnd(0, 1) == 1;
+            var fn = isM ? sn1 * sn2 : sn1 * sd2, fd = isM ? sd1 * sd2 : sd1 * sn2;
+            if (isM) {
+                html = bF(sn1, sd1, 0, 'nm', 'vl') + fS('·') + bF(sn2, sd2, 0, 'nm', 'vl') + fS('=') + bF(sn1 + '·' + sn2, sd1 + '·' + sd2, 0, 'nm', 'vl') + fS('=') + bF(fn, fd, '', 0, 'vl') + reduction(fn, fd);
+            } else {
+                html = bF(sn1, sd1, 0, 'nm', 'vl') + fS(':') + bF(sn2, sd2, 0, 'nm', 'vl') + fS('=') + bF(sn1, sd1, 0, 'nm', 'vl') + fS('·') + bF(sd2, sn2, 0, 'vl', 'nm') + fS('=') + bF(fn, fd, '', 0, 'vl') + reduction(fn, fd);
+            }
+        }
+        box.innerHTML = html;
+    }
+
+    window.onload = function () { gen(true); };
 </script>
 </body>
 </html>

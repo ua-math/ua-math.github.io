@@ -4,54 +4,156 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Тренажер: Лінійні Рівняння та Системи</title>
-    <style>
-        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
-        .cn { background-color: #ffffff; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); padding: 40px; width: 100%; max-width: 1100px; text-align: center; position: relative; }
-        .bd { position: absolute; top: 20px; right: 20px; background-color: #e2e8f0; color: #475569; padding: 8px 16px; border-radius: 20px; font-size: 1rem; font-weight: bold; cursor: pointer; }
-        h1 { color: #1e293b; font-size: 1.8rem; margin-bottom: 25px; }
-        .cp { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 30px; }
-        .rw { display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; width: 100%; margin-bottom: 8px; }
-        .sub-lbl { font-size: 1.1rem; font-weight: 500; color: #475569; padding-right: 5px; }
-        .tb { background-color: #f1f5f9; color: #475569; border: 2px solid #cbd5e1; border-radius: 8px; padding: 10px 15px; font-size: 1.1rem; font-weight: 500; cursor: pointer; }
-        .tb.active { background-color: #2563eb; color: white; border-color: #2563eb; }
-        .eq { overflow-x: auto; white-space: nowrap; background-color: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 30px 15px; margin-bottom: 30px; }
-        .ds { font-size: 1.9rem; font-weight: bold; color: #0f172a; display: block; text-align: left; }
-        .v-x { color: #2563eb; font-style: italic; } .v-y { color: #8b5cf6; font-style: italic; } .sg { color: #f97316; font-weight: bold; padding: 0 4px; } 
-        .sys-bracket { font-size: 4.5rem; color: #475569; vertical-align: middle; margin-right: 5px; display: inline-block; line-height: 1; font-weight: 300; }
-        .sys-block { display: inline-block; vertical-align: middle; text-align: left; line-height: 1.4; }
-        .bt { background-color: #10b981; color: white; border: none; border-radius: 12px; padding: 18px 36px; font-size: 1.4rem; font-weight: 600; cursor: pointer; width: 100%; max-width: 350px; display: block; margin: 0 auto; }
-        .step-row { display: grid; grid-template-columns: 280px 1fr; margin-bottom: 12px; align-items: start; white-space: normal; }
-        .step-lbl { text-align: right; padding-right: 15px; color: #475569; font-weight: 600; font-size: 1.3rem; border-right: 3px solid #cbd5e1; }
-        .step-val { padding-left: 15px; font-size: 1.8rem; }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-<div class="cn">
-    <div class="bd" id="cnt" onclick="resC()">Переглянуто: 0</div>
+<body class="trainer page-equations">
+<div class="container">
+    <div class="counter-badge" id="cnt" onclick="resC()">Переглянуто: 0</div>
     <h1>Тренажер: Лінійні Рівняння та Системи</h1>
-    <div class="cp">
-        <div class="rw">
-            <button class="tb active" onclick="chM(0, this)">Просте рівняння</button>
-            <button class="tb" onclick="chM(1, this)">Рівняння з дужками</button>
+    <div class="control-panel">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="chM(0, this)">Просте рівняння</button>
+            <button class="tab-btn" onclick="chM(1, this)">Рівняння з дужками</button>
         </div>
-        <div class="rw">
+        <div class="tabs">
             <span class="sub-lbl">Система 2 змінних:</span>
-            <button class="tb" onclick="chM(2, this)">Вираження змінної</button>
-            <button class="tb" onclick="chM(3, this)">Скорочення змінної</button>
+            <button class="tab-btn" onclick="chM(2, this)">Вираження змінної</button>
+            <button class="tab-btn" onclick="chM(3, this)">Скорочення змінної</button>
         </div>
     </div>
-    <div class="eq"><div class="ds" id="box"></div></div>
-    <div class="controls"><button class="bt" onclick="gen(true)">Інший приклад</button></div>
+    <div class="equation-container"><div class="equation-display" id="box"></div></div>
+    <div class="controls"><button class="btn" onclick="gen(true)">Інший приклад</button></div>
 </div>
 <script>
-    var m=0,c=0;var rnd=function(x,y){return Math.floor(Math.random()*(y-x+1))+x;};var rndN=function(x,y){var n=0;while(n===0)n=rnd(x,y);return n;};var fS=function(s){return'<span class="sg">'+s+'</span>';};
-    var fX=function(co,f){if(co===0)return'';return(co===1?(f?'':fS('+')):(co===-1?fS('-'):(co>0?(f?'':fS('+'))+co:fS('-')+Math.abs(co))))+'<span class="v-x">x</span>';};
-    var fY=function(co,f){if(co===0)return'';return(co===1?(f?'':fS('+')):(co===-1?fS('-'):(co>0?(f?'':fS('+'))+co:fS('-')+Math.abs(co))))+'<span class="v-y">y</span>';};
-    var fC=function(v,f){if(v===0)return f?'0':'';return v>0?(f?'':fS('+'))+v:fS('-')+Math.abs(v);};function sR(l,v){return'<div class="step-row"><div class="step-lbl">'+l+':</div><div class="step-val">'+v+'</div></div>';}
-    function bSys(x1,y1,c1,x2,y2,c2,m1,m2,actSign){var act=actSign?'  '+fS('│ ')+fS(actSign):'';return'<span class="sys-bracket">{</span><div class="sys-block">'+fX(x1,true)+fY(y1,false)+fS('=')+c1+(m1?'  '+fS('│·')+m1:'')+'<br>'+fX(x2,true)+fY(y2,false)+fS('=')+c2+(m2?'  '+fS('│·')+m2:'')+act+'</div>';}
-    function gcd(x,y){return y===0?Math.abs(x):gcd(y,x%y);}function lcm(x,y){return Math.abs(x*y)/gcd(x,y);}function chM(x,el){m=x;var b=document.querySelectorAll('.tb');for(var i=0;i<b.length;i++)b[i].classList.remove('active');el.classList.add('active');gen(true);}function resC(){c=0;document.getElementById('cnt').innerText='Переглянуто: 0';}
-    function gen(inc){if(inc){c++;document.getElementById('cnt').innerText='Переглянуто: '+c;}var box=document.getElementById('box'),html='';if(m===0){var xA=rnd(-8,8),a=rndN(-6,6),cC=rndN(-6,6);while(a===cC)cC=rndN(-6,6);var b=rnd(-15,15),d=a*xA+b-cC*xA;html+=sR('Умова',fX(a,true)+fC(b,false)+fS('=')+fX(cC,true)+fC(d,false));html+=sR('Перенесення',fX(a,true)+fX(-cC,false)+fS('=')+fC(d,true)+fC(-b,false));var lX=a-cC,rC=d-b;html+=sR('Зведення подібних',fX(lX,true)+fS('=')+fC(rC,true));html+=sR('Результат','<span class="v-x">x</span>'+fS('=')+rC+fS('/')+(lX<0?'('+lX+')':lX)+fS('=')+xA);}else if(m===1){var xA=rnd(-6,6),a=rndN(-5,5),b=rndN(1,4),cC=rnd(-6,6),d=a*(b*xA+cC);html+=sR('Умова',(a===-1?fS('-'):(a===1?'':a))+fS('(')+fX(b,true)+fC(cC,false)+fS(')')+fS('=')+d);html+=sR('Розкриття дужок',fX(a*b,true)+fC(a*cC,false)+fS('=')+d);html+=sR('Перенесення',fX(a*b,true)+fS('=')+d+fC(-a*cC,false));var lX=a*b,rC=d-a*cC;html+=sR('Зведення подібних',fX(lX,true)+fS('=')+rC);html+=sR('Результат','<span class="v-x">x</span>'+fS('=')+rC+fS('/')+(lX<0?'('+lX+')':lX)+fS('=')+xA);}else{var xA=rnd(-4,4),yA=rnd(-4,4);var x1=0,y1=0,x2=0,y2=0;while(true){x1=(m===2)?1:rndN(2,4);y1=rndN(-3,4);x2=rndN(2,4);y2=rndN(-4,4);if(x1*y2!==x2*y1)break;}var c1=x1*xA+y1*yA,c2=x2*xA+y2*yA;if(m===2){html+=sR('Умова системи',bSys(1,y1,c1,x2,y2,c2));var exprStr=c1===0?fY(-y1,true):fC(c1,true)+fY(-y1,false);html+=sR('Вираження x','<span class="v-x">x</span>'+fS('=')+exprStr);html+=sR('Підстановка',x2+fS('(')+exprStr+fS(')')+fY(y2,false)+fS('=')+c2);html+=sR('Розкриття дужок',(x2*c1)+fY(-x2*y1,false)+fY(y2,false)+fS('=')+c2);var lY=-x2*y1+y2,rC=c2-x2*c1;html+=sR('Зводимо подібні',fY(lY,true)+fS('=')+rC);html+=sR('Знаходження y','<span class="v-y">y</span>'+fS('=')+rC+fS('/')+(lY<0?'('+lY+')':lY)+fS('=')+yA);var sY=-y1;var pY='';if(sY===1)pY=fS('+');else if(sY===-1)pY=fS('-');else pY=sY>0?fS('+')+sY:fS('-')+Math.abs(sY);var subCalc=needMult||Math.abs(sY)!==1?pY+fS('·')+'<span class="v-y">('+yA+')</span>':pY+'<span class="v-y">('+yA+')</span>';var baseC=c1===0?'':fC(c1,true);html+=sR('Знаходження x','<span class="v-x">x</span>'+fS('=')+baseC+subCalc+fS('=')+xA);}else{var L=lcm(y1,y2),m1=L/Math.abs(y1),m2=L/Math.abs(y2);var ny1=y1*m1,ny2=y2*m2;var sS=(ny1===ny2||ny1===-ny2)&&((y1>0&&y2>0)||(y1<0&&y2<0));var act=sS?'-':'+';var needMult=(m1>1||m2>1);if(!needMult){html+=sR('Умова системи',bSys(x1,y1,c1,x2,y2,c2,0,0,act));}else{html+=sR('Умова системи',bSys(x1,y1,c1,x2,y2,c2,m1,m2));var nx1=x1*m1,nny1=y1*m1,nc1=c1*m1;var nx2=x2*m2,nny2=y2*m2,nc2=c2*m2;html+=sR('Після домноження',bSys(nx1,nny1,nc1,nx2,nny2,nc2,0,0,act));}var v1=x1*m1,v2=x2*m2,k1=c1*m1,k2=c2*m2;var rX=sS?(v1-v2):(v1+v2),rC=sS?(k1-k2):(k1+k2);var opC=sS?fS('-'):fS('+');var actTxt=sS?'віднімання':'додавання';var prsStr=fS('(')+v1+opC+(v2<0?'('+v2+')':v2)+fS(')')+'<span class="v-x">x</span>'+fS('=')+k1+opC+(k2<0?'('+k2+')':k2)+'  '+fS('➔')+'  '+fX(rX,true)+fS('=')+rC;html+=sR('Після '+actTxt,prsStr);html+=sR('Знаходження x','<span class="v-x">x</span>'+fS('=')+rC+fS('/')+(rX<0?'('+rX+')':rX)+fS('=')+xA);html+=sR('Підставляння х',x1+fS('·')+'<span class="v-x">('+xA+')</span>'+fY(y1,false)+fS('=')+c1);var rCY=c1-(x1*xA);html+=sR('Знаходження y','<span class="v-y">y</span>'+fS('=')+rCY+fS('/')+(y1<0?'('+y1+')':y1)+fS('=')+yA);}html+=sR('Відповідь',fS('(')+'<span class="v-x">x</span>'+';'+'<span class="v-y">y</span>'+fS(')')+fS('=')+'('+xA+';'+yA+')');}box.innerHTML=html;}window.onload=function(){gen(true);};
+    var m = 0, c = 0;
+
+    var rnd = function (x, y) { return Math.floor(Math.random() * (y - x + 1)) + x; };
+    var rndN = function (x, y) { var n = 0; while (n === 0) n = rnd(x, y); return n; };
+    var fS = function (s) { return '<span class="sign">' + s + '</span>'; };
+
+    var fX = function (co, f) {
+        if (co === 0) return '';
+        return (co === 1 ? (f ? '' : fS('+')) : (co === -1 ? fS('-') : (co > 0 ? (f ? '' : fS('+')) + co : fS('-') + Math.abs(co)))) + '<span class="v-x">x</span>';
+    };
+
+    var fY = function (co, f) {
+        if (co === 0) return '';
+        return (co === 1 ? (f ? '' : fS('+')) : (co === -1 ? fS('-') : (co > 0 ? (f ? '' : fS('+')) + co : fS('-') + Math.abs(co)))) + '<span class="v-y">y</span>';
+    };
+
+    var fC = function (v, f) {
+        if (v === 0) return f ? '0' : '';
+        return v > 0 ? (f ? '' : fS('+')) + v : fS('-') + Math.abs(v);
+    };
+
+    function sR(l, v) {
+        return '<div class="step-row"><div class="step-lbl">' + l + ':</div><div class="step-val">' + v + '</div></div>';
+    }
+
+    function bSys(x1, y1, c1, x2, y2, c2, m1, m2, actSign) {
+        var act = actSign ? '  ' + fS('│ ') + fS(actSign) : '';
+        return '<span class="sys-bracket">{</span><div class="sys-block">' + fX(x1, true) + fY(y1, false) + fS('=') + c1 + (m1 ? '  ' + fS('│·') + m1 : '') + '<br>' + fX(x2, true) + fY(y2, false) + fS('=') + c2 + (m2 ? '  ' + fS('│·') + m2 : '') + act + '</div>';
+    }
+
+    function gcd(x, y) { return y === 0 ? Math.abs(x) : gcd(y, x % y); }
+    function lcm(x, y) { return Math.abs(x * y) / gcd(x, y); }
+
+    function chM(x, el) {
+        m = x;
+        var b = document.querySelectorAll('.tab-btn');
+        for (var i = 0; i < b.length; i++) b[i].classList.remove('active');
+        el.classList.add('active');
+        gen(true);
+    }
+
+    function resC() {
+        c = 0;
+        document.getElementById('cnt').innerText = 'Переглянуто: 0';
+    }
+
+    function gen(inc) {
+        if (inc) {
+            c++;
+            document.getElementById('cnt').innerText = 'Переглянуто: ' + c;
+        }
+        var box = document.getElementById('box'), html = '';
+
+        if (m === 0) {
+            var xA = rnd(-8, 8), a = rndN(-6, 6), cC = rndN(-6, 6);
+            while (a === cC) cC = rndN(-6, 6);
+            var b = rnd(-15, 15), d = a * xA + b - cC * xA;
+            html += sR('Умова', fX(a, true) + fC(b, false) + fS('=') + fX(cC, true) + fC(d, false));
+            html += sR('Перенесення', fX(a, true) + fX(-cC, false) + fS('=') + fC(d, true) + fC(-b, false));
+            var lX = a - cC, rC = d - b;
+            html += sR('Зведення подібних', fX(lX, true) + fS('=') + fC(rC, true));
+            html += sR('Результат', '<span class="v-x">x</span>' + fS('=') + rC + fS('/') + (lX < 0 ? '(' + lX + ')' : lX) + fS('=') + xA);
+        } else if (m === 1) {
+            var xA = rnd(-6, 6), a = rndN(-5, 5), b = rndN(1, 4), cC = rnd(-6, 6), d = a * (b * xA + cC);
+            html += sR('Умова', (a === -1 ? fS('-') : (a === 1 ? '' : a)) + fS('(') + fX(b, true) + fC(cC, false) + fS(')') + fS('=') + d);
+            html += sR('Розкриття дужок', fX(a * b, true) + fC(a * cC, false) + fS('=') + d);
+            html += sR('Перенесення', fX(a * b, true) + fS('=') + d + fC(-a * cC, false));
+            var lX = a * b, rC = d - a * cC;
+            html += sR('Зведення подібних', fX(lX, true) + fS('=') + rC);
+            html += sR('Результат', '<span class="v-x">x</span>' + fS('=') + rC + fS('/') + (lX < 0 ? '(' + lX + ')' : lX) + fS('=') + xA);
+        } else {
+            var xA = rnd(-4, 4), yA = rnd(-4, 4);
+            var x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+            while (true) {
+                x1 = (m === 2) ? 1 : rndN(2, 4);
+                y1 = rndN(-3, 4);
+                x2 = rndN(2, 4);
+                y2 = rndN(-4, 4);
+                if (x1 * y2 !== x2 * y1) break;
+            }
+            var c1 = x1 * xA + y1 * yA, c2 = x2 * xA + y2 * yA;
+            if (m === 2) {
+                html += sR('Умова системи', bSys(1, y1, c1, x2, y2, c2));
+                var exprStr = c1 === 0 ? fY(-y1, true) : fC(c1, true) + fY(-y1, false);
+                html += sR('Вираження x', '<span class="v-x">x</span>' + fS('=') + exprStr);
+                html += sR('Підстановка', x2 + fS('(') + exprStr + fS(')') + fY(y2, false) + fS('=') + c2);
+                html += sR('Розкриття дужок', (x2 * c1) + fY(-x2 * y1, false) + fY(y2, false) + fS('=') + c2);
+                var lY = -x2 * y1 + y2, rC = c2 - x2 * c1;
+                html += sR('Зводимо подібні', fY(lY, true) + fS('=') + rC);
+                html += sR('Знаходження y', '<span class="v-y">y</span>' + fS('=') + rC + fS('/') + (lY < 0 ? '(' + lY + ')' : lY) + fS('=') + yA);
+                var sY = -y1;
+                var pY = '';
+                if (sY === 1) pY = fS('+');
+                else if (sY === -1) pY = fS('-');
+                else pY = sY > 0 ? fS('+') + sY : fS('-') + Math.abs(sY);
+                var subCalc = needMult || Math.abs(sY) !== 1 ? pY + fS('·') + '<span class="v-y">(' + yA + ')</span>' : pY + '<span class="v-y">(' + yA + ')</span>';
+                var baseC = c1 === 0 ? '' : fC(c1, true);
+                html += sR('Знаходження x', '<span class="v-x">x</span>' + fS('=') + baseC + subCalc + fS('=') + xA);
+            } else {
+                var L = lcm(y1, y2), m1 = L / Math.abs(y1), m2 = L / Math.abs(y2);
+                var ny1 = y1 * m1, ny2 = y2 * m2;
+                var sS = (ny1 === ny2 || ny1 === -ny2) && ((y1 > 0 && y2 > 0) || (y1 < 0 && y2 < 0));
+                var act = sS ? '-' : '+';
+                var needMult = (m1 > 1 || m2 > 1);
+                if (!needMult) {
+                    html += sR('Умова системи', bSys(x1, y1, c1, x2, y2, c2, 0, 0, act));
+                } else {
+                    html += sR('Умова системи', bSys(x1, y1, c1, x2, y2, c2, m1, m2));
+                    var nx1 = x1 * m1, nny1 = y1 * m1, nc1 = c1 * m1;
+                    var nx2 = x2 * m2, nny2 = y2 * m2, nc2 = c2 * m2;
+                    html += sR('Після домноження', bSys(nx1, nny1, nc1, nx2, nny2, nc2, 0, 0, act));
+                }
+                var v1 = x1 * m1, v2 = x2 * m2, k1 = c1 * m1, k2 = c2 * m2;
+                var rX = sS ? (v1 - v2) : (v1 + v2), rC = sS ? (k1 - k2) : (k1 + k2);
+                var opC = sS ? fS('-') : fS('+');
+                var actTxt = sS ? 'віднімання' : 'додавання';
+                var prsStr = fS('(') + v1 + opC + (v2 < 0 ? '(' + v2 + ')' : v2) + fS(')') + '<span class="v-x">x</span>' + fS('=') + k1 + opC + (k2 < 0 ? '(' + k2 + ')' : k2) + '  ' + fS('➔') + '  ' + fX(rX, true) + fS('=') + rC;
+                html += sR('Після ' + actTxt, prsStr);
+                html += sR('Знаходження x', '<span class="v-x">x</span>' + fS('=') + rC + fS('/') + (rX < 0 ? '(' + rX + ')' : rX) + fS('=') + xA);
+                html += sR('Підставляння х', x1 + fS('·') + '<span class="v-x">(' + xA + ')</span>' + fY(y1, false) + fS('=') + c1);
+                var rCY = c1 - (x1 * xA);
+                html += sR('Знаходження y', '<span class="v-y">y</span>' + fS('=') + rCY + fS('/') + (y1 < 0 ? '(' + y1 + ')' : y1) + fS('=') + yA);
+            }
+            html += sR('Відповідь', fS('(') + '<span class="v-x">x</span>' + ';' + '<span class="v-y">y</span>' + fS(')') + fS('=') + '(' + xA + ';' + yA + ')');
+        }
+        box.innerHTML = html;
+    }
+
+    window.onload = function () { gen(true); };
 </script>
 </body>
 </html>

@@ -1,0 +1,362 @@
+:root {
+    --primary: #0057b7;
+    --accent: #ffd700;
+    --bg: #f4f7f9;
+    --text: #333;
+    --gap-x: clamp(1px, 2vw, 15px);
+}
+
+* {
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body.trainer {
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: var(--gap-x);
+}
+
+.trainer .container {
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    padding: 40px var(--gap-x);
+    width: 100%;
+    max-width: 1100px;
+    text-align: center;
+    position: relative;
+}
+
+.trainer .counter-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #e2e8f0;
+    color: #475569;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.trainer h1 {
+    color: #1e293b;
+    font-size: 1.8rem;
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+.trainer .control-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.trainer .tabs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.trainer .tab-btn {
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 2px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.page-factors .tab-btn {
+    font-weight: 500;
+}
+.trainer .tab-btn.active {
+    background-color: #2563eb;
+    color: white;
+    border-color: #2563eb;
+}
+
+/* factors.html emphasized buttons (visual, kept) */
+.trainer .tab-btn.tb-bold {
+    font-weight: 800;
+    border-color: #94a3b8;
+}
+.trainer .tab-btn.tb-bold.active {
+    background-color: #1d4ed8;
+    border-color: #1d4ed8;
+}
+
+/* Sub-label used by equations.html system row */
+.trainer .sub-lbl {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #475569;
+    padding-right: 5px;
+}
+
+/* Options block (expressions.html) */
+.trainer .options {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.trainer .checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    cursor: pointer;
+    background-color: #fff7ed;
+    border: 2px dashed #f97316;
+    padding: 10px 15px;
+    border-radius: 8px;
+}
+.trainer .checkbox-container.inverse {
+    background-color: #f0fdf4;
+    border-color: #10b981;
+}
+.trainer .checkbox-container input {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.trainer .equation-container {
+    overflow-x: auto;
+    white-space: nowrap;
+    background-color: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 30px var(--gap-x);
+    margin-bottom: 30px;
+}
+
+.trainer .equation-display {
+    font-weight: bold;
+    color: #0f172a;
+}
+/* font-size / display / alignment are visual, kept per-page */
+.page-equations .equation-display {
+    font-size: 1.9rem;
+    display: block;
+    text-align: left;
+}
+.page-factors .equation-display {
+    font-size: 2.2rem;
+    display: inline-block;
+    vertical-align: middle;
+}
+.page-expressions .equation-display {
+    font-size: 3.5rem;
+    display: inline-block;
+}
+
+/* Inline math tokens */
+.trainer .variable,
+.trainer .v-x { color: #2563eb; font-style: italic; }
+.trainer .v-y,
+.trainer .vl { color: #8b5cf6; }
+.trainer .v-y { font-style: italic; }
+.trainer .sign { color: #f97316; font-weight: bold; padding: 0 4px; }
+
+/* equations.html system rendering */
+.trainer .sys-bracket {
+    font-size: 4.5rem;
+    color: #475569;
+    vertical-align: middle;
+    margin-right: 5px;
+    display: inline-block;
+    line-height: 1;
+    font-weight: 300;
+}
+.trainer .sys-block {
+    display: inline-block;
+    vertical-align: middle;
+    text-align: left;
+    line-height: 1.4;
+}
+.trainer .step-row {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    margin-bottom: 12px;
+    align-items: start;
+    white-space: normal;
+}
+.trainer .step-lbl {
+    text-align: right;
+    padding-right: 15px;
+    color: #475569;
+    font-weight: 600;
+    font-size: 1.3rem;
+    border-right: 3px solid #cbd5e1;
+}
+.trainer .step-val {
+    padding-left: 15px;
+    font-size: 1.8rem;
+}
+
+/* factors.html arithmetic / fraction rendering */
+.trainer .nm { color: #2563eb; }
+.trainer .lb {
+    font-size: 1.7rem;
+    color: #475569;
+    font-weight: 600;
+    padding: 0 4px;
+}
+.trainer .wh {
+    color: #8b5cf6;
+    font-size: 2.5rem;
+    padding-right: 2px;
+}
+.trainer .fr {
+    display: inline-flex;
+    flex-direction: column;
+    vertical-align: middle;
+    align-items: center;
+    padding: 0 2px;
+}
+.trainer .nu {
+    border-bottom: 4px solid #f97316;
+    padding-bottom: 2px;
+    line-height: 1;
+}
+.trainer .de {
+    padding-top: 4px;
+    line-height: 1;
+}
+.trainer .mp {
+    font-size: 1.2rem;
+    color: #10b981;
+    vertical-align: super;
+    font-weight: bold;
+}
+.trainer s { color: #ef4444; text-decoration: line-through; font-weight: bold; }
+.trainer s .nm, .trainer s .vl { color: #ef4444; }
+.trainer .hc {
+    text-decoration: underline;
+    text-decoration-style: wavy;
+    text-decoration-color: #10b981;
+    text-underline-offset: 4px;
+    display: inline-block;
+}
+
+/* Primary action button */
+.trainer .btn {
+    background-color: #10b981;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 18px 36px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    max-width: 350px;
+}
+/* equations.html centered its button explicitly (layout, kept) */
+.page-equations .btn {
+    display: block;
+    margin: 0 auto;
+}
+.trainer .btn:hover { background-color: #059669; }
+
+/* ============================================================
+   Landing page (index.html)
+   Kept close to the trainer design system.
+   ============================================================ */
+body.home {
+    background-color: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+}
+.home .container {
+    max-width: 900px;
+    width: 90%;
+    text-align: center;
+    padding: 20px;
+}
+.home h1 {
+    color: var(--primary);
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+.home .subtitle {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 40px;
+}
+.home .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+}
+.home .card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    text-decoration: none;
+    color: var(--text);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    border: 2px solid transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.home .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 55, 183, 0.15);
+    border-color: var(--primary);
+}
+.home .icon-box {
+    width: 80px;
+    height: 80px;
+    background-color: #e6f0fa;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--primary);
+}
+.home .icon-box.fraction { font-size: 2rem; }
+
+.home .card h2 {
+    font-size: 1.4rem;
+    margin: 10px 0;
+    color: #111;
+}
+.home .card p {
+    font-size: 0.95rem;
+    color: #666;
+    line-height: 1.4;
+}
+.home footer {
+    margin-top: 50px;
+    font-size: 0.9rem;
+    color: #999;
+}

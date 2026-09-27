@@ -171,7 +171,7 @@ body.trainer {
 .trainer .variable,
 .trainer .v-x { color: #2563eb; font-style: italic; }
 .trainer .v-y,
-.trainer .vl { color: #8b5cf6; }
+.trainer .vl { color: #8b5cf6; padding-right: 3px; }
 .trainer .v-y { font-style: italic; }
 .trainer .sign { color: #f97316; font-weight: bold; padding: 0 4px; }
 
@@ -218,11 +218,6 @@ body.trainer {
     color: #475569;
     font-weight: 600;
     padding: 0 4px;
-}
-.trainer .wh {
-    color: #8b5cf6;
-    font-size: 2.5rem;
-    padding-right: 2px;
 }
 .trainer .fr {
     display: inline-flex;

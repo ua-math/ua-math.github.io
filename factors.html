@@ -61,7 +61,7 @@
     function reduction(n, d) {
         var g = gcd(n, d);
         if (g <= 1) return '';
-        return fS('=') + bS(n, d, ':' + g) + fS('=') + bF(n / g, d / g, '', 0, 'nm');
+        return fS('=') + bS(n, d, ':' + g) + fS('=') + bF(n / g, d / g);
     }
 
     function buildP(n, co, g) {
@@ -116,6 +116,13 @@
         return res;
     }
 
+    function twoFractions(lo, hi) {
+        var sd1 = rnd(lo, hi), sd2 = rnd(lo, hi);
+        while (sd1 === sd2) sd2 = rnd(lo, hi);
+        var sn1 = rnd(1, sd1 - 1), sn2 = rnd(1, sd2 - 1);
+        return [sd1, sd2, sn1, sn2];
+    }
+
     function chM(x, el) {
         m = x;
         var b = document.querySelectorAll('.tab-btn');
@@ -149,30 +156,34 @@
             html = lbl + fS('(') + fN(n1) + fS(';') + fN(n2) + fS(')') + fS('=') + p2 + (p3 === p4 ? '' : fS('=') + p3) + fS('=') + p4;
         } else if (m === 3) {
             var sd = rnd(3, 9), wh = rnd(1, 5), re = rnd(1, sd - 1), num = wh * sd + re;
-            html = bF(num, sd) + fS('➔') + bF(wh * sd + '+' + re, sd) + fS('➔') + bF(wh * sd, sd, 0, 'wh') + fS('+') + bF(re, sd) + fS('=') + '<span class="wh">' + wh + '</span>' + bF(re, sd, '', 0, 'vl');
+            html = bF(num, sd) + fS('➔') + bF(wh * sd + '+' + re, sd) + fS('➔') + bF(wh * sd, sd, 0, 'vl') + fS('+') + bF(re, sd) + fS('=') + '<span class="vl">' + wh + '</span>' + bF(re, sd);
         } else if (m === 4) {
             var com = rnd(2, 7), sd = rnd(3, 9), sn = rnd(1, sd - 1);
             while (gcd(sn, sd) > 1) { sd = rnd(3, 9); sn = rnd(1, sd - 1); }
-            html = bF(sn * com, sd * com) + fS('➔') + bS(sn * com, sd * com, ':' + com) + fS('=') + bF(sn, sd, '', 0, 'nm');
+            html = bF(sn * com, sd * com) + fS(' ➔ ') + bS(sn * com, sd * com, ':' + com) + fS('=') + bF(sn, sd);
         } else if (m === 5) {
-            var sd1 = rnd(3, 7), sd2 = rnd(3, 7);
-            while (sd1 === sd2) sd2 = rnd(3, 7);
-            var sn1 = rnd(1, sd1 - 1), sn2 = rnd(1, sd2 - 1), cd = lcm(sd1, sd2), m1 = cd / sd1, m2 = cd / sd2;
-            html = bF(sn1, sd1, '(' + m1 + ')') + '<span class="lb"> і </span>' + bF(sn2, sd2, '（' + m2 + ')') + fS('➔') + bF(sn1 * m1, cd) + '<span class="lb"> і </span>' + bF(sn2 * m2, cd);
+            var [sd1, sd2, sn1, sn2] = twoFractions(3, 8);
+            var fd = lcm(sd1, sd2), m1 = fd / sd1, m2 = fd / sd2;
+            html = bF(sn1, sd1, '(' + m1 + ')') + '<span class="lb"> і </span>' + bF(sn2, sd2, '（' + m2 + ')') + fS(' ➔ ') + bF(sn1 * m1, fd) + '<span class="lb"> і </span>' + bF(sn2 * m2, fd);
         } else if (m === 6) {
-            var sd1 = rnd(3, 6), sd2 = rnd(3, 6);
-            while (sd1 === sd2) sd2 = rnd(3, 6);
-            var sn1 = rnd(1, sd1 - 1), sn2 = rnd(1, sd2 - 1), isAdd = rnd(0, 1) == 1, cd = lcm(sd1, sd2), m1 = cd / sd1, m2 = cd / sd2, op = isAdd ? '+' : '-';
-            var top1 = sn1 * m1, top2 = sn2 * m2, finalTop = isAdd ? (top1 + top2) : (top1 - top2);
-            if (finalTop <= 0) { op = '+'; finalTop = top1 + top2; }
-            html = bF(sn1, sd1, '(' + m1 + ')') + fS(op) + bF(sn2, sd2, '(' + m2 + ')') + fS('=') + bF(top1 + op + top2, cd) + fS('=') + bF(finalTop, cd) + reduction(finalTop, cd);
+            var [sd1, sd2, sn1, sn2] = twoFractions(3, 8);
+            var isAdd = rnd(0, 1) == 1, op = isAdd ? '+' : '-';
+            var fd = lcm(sd1, sd2), m1 = fd / sd1, m2 = fd / sd2;
+            var top1 = sn1 * m1, top2 = sn2 * m2, fn = isAdd ? (top1 + top2) : (top1 - top2);
+            if (fn <= 0) { op = '+'; fn = top1 + top2; }
+            html = bF(sn1, sd1, '(' + m1 + ')') + fS(op) + bF(sn2, sd2, '(' + m2 + ')') + fS('=') + bF(top1 + op + top2, fd)
+                 + fS('=') + bF(fn, fd) + reduction(fn, fd);
         } else {
-            var sd1 = rnd(3, 8), sd2 = rnd(3, 8), sn1 = rnd(1, sd1 - 1), sn2 = rnd(1, sd2 - 1), isM = rnd(0, 1) == 1;
+            var [sd1, sd2, sn1, sn2] = twoFractions(3, 8);
+            var isM = rnd(0, 1) == 1, op = isM ? '·' : ':';
+            html = bF(sn1, sd1, 0, 'nm', 'vl') + fS(op) + bF(sn2, sd2, 0, 'nm', 'vl') + fS('=');
             var fn = isM ? sn1 * sn2 : sn1 * sd2, fd = isM ? sd1 * sd2 : sd1 * sn2;
             if (isM) {
-                html = bF(sn1, sd1, 0, 'nm', 'vl') + fS('·') + bF(sn2, sd2, 0, 'nm', 'vl') + fS('=') + bF(sn1 + '·' + sn2, sd1 + '·' + sd2, 0, 'nm', 'vl') + fS('=') + bF(fn, fd, '', 0, 'vl') + reduction(fn, fd);
+                html += bF(sn1 + '·' + sn2, sd1 + '·' + sd2, 0, 'nm', 'vl')
+                      + fS('=') + bF(fn, fd, '', 0, 'vl') + reduction(fn, fd);
             } else {
-                html = bF(sn1, sd1, 0, 'nm', 'vl') + fS(':') + bF(sn2, sd2, 0, 'nm', 'vl') + fS('=') + bF(sn1, sd1, 0, 'nm', 'vl') + fS('·') + bF(sd2, sn2, 0, 'vl', 'nm') + fS('=') + bF(fn, fd, '', 0, 'vl') + reduction(fn, fd);
+                html += bF(sn1, sd1, 0, 'nm', 'vl') + fS('·') + bF(sd2, sn2, 0, 'vl', 'nm')
+                      + fS('=') + bF(fn, fd, '', 0, 'nm') + reduction(fn, fd);
             }
         }
         box.innerHTML = html;

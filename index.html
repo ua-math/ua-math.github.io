@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Математика 7 клас | UA-Math</title>
+    <style>
+        :root {
+            --primary: #0057b7; /* Синій колір */
+            --accent: #ffd700;  /* Жовтий колір */
+            --bg: #f4f7f9;
+            --text: #333;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            max-width: 900px;
+            width: 90%;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        p.subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 40px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            text-decoration: none;
+            color: var(--text);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,55,183,0.15);
+            border-color: var(--primary);
+        }
+        .icon-box {
+            width: 80px;
+            height: 80px;
+            background-color: #e6f0fa;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        .icon-box.fraction {
+            font-size: 2rem;
+        }
+        .icon-box.expression {
+            font-size: 1.5rem;
+        }
+        .icon-box.equation {
+            font-size: 1.3rem;
+            letter-spacing: -0.5px;
+        }
+        .card h2 {
+            font-size: 1.4rem;
+            margin: 10px 0;
+            color: #111;
+        }
+        .card p {
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.4;
+        }
+        footer {
+            margin-top: 50px;
+            font-size: 0.9rem;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>📐 UA-Math</h1>
+        <p class="subtitle">Інтерактивні матеріали з математики для 7-8 класу</p>
+
+        <div class="grid">
+            <!-- Картка 1: Дроби -->
+            <a href="factors.html" class="card">
+                <div class="icon-box fraction">
+                    ½
+                </div>
+                <h2>Робота з дробами</h2>
+                <p>Розкладання на множники, зведення дробів та обчислення.</p>
+            </a>
+
+            <!-- Картка 2: Вирази -->
+            <a href="expressions.html" class="card">
+                <div class="icon-box expression">
+                    (x+y)
+                </div>
+                <h2>Вирази</h2>
+                <p>Перетворення виразів, тотожності та спрощення алгебраїчних значень.</p>
+            </a>
+
+            <!-- Картка 3: Рівняння -->
+            <a href="equations.html" class="card">
+                <div class="icon-box equation">
+                    x+3=5
+                </div>
+                <h2>Рівняння</h2>
+                <p>Розв'язування лінійних рівнянь та систем.</p>
+            </a>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 ua-math.github.io</p>
+        </footer>
+    </div>
+
+</body>
+</html>
